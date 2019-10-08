@@ -2,13 +2,15 @@ package com.example.flutter_conekta;
 
 import android.app.Activity;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Alfredo Quintero Tlacuilo on 27/10/15.
+ * Created by picharras on 27/10/15.
  */
 public class Token {
     private String endPoint = "/tokens";
@@ -34,23 +36,30 @@ public class Token {
 
     public void create(Card card) {
         /* Remember add to index of nameValuePair if you add more rows */
-        Map<String, String> body = new HashMap<>();
+        List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(6);
 
-        body.put("number", card.getNumber());
-        body.put("name", card.getName());
-        body.put("cvc", card.getCvc());
-        body.put("exp_month", card.getExpMonth());
-        body.put("exp_year", card.getExpYear());
-        body.put("device_fingerprint", Conekta.deviceFingerPrint(activity));
+        nameValuePair.add(new BasicNameValuePair("card[number]", card.getNumber()));
+        nameValuePair.add(new BasicNameValuePair("card[name]", card.getName()));
+        nameValuePair.add(new BasicNameValuePair("card[cvc]", card.getCvc()));
+        nameValuePair.add(new BasicNameValuePair("card[exp_month]", card.getExpMonth()));
+        nameValuePair.add(new BasicNameValuePair("card[exp_year]", card.getExpYear()));
+        nameValuePair.add(new BasicNameValuePair("card[device_fingerprint]", Conekta.deviceFingerPrint(activity)));
 
         Connection connection = new Connection();
 
-        connection.onRequestListener(new Connection.ConnectionRequest() {
+        connection.onRequestListener(new Connection.Request() {
             @Override
-            public void onRequestReady(JSONObject data) {
-                listener.onCreateTokenReady(data);
+            public void onRequestReady(String data) {
+                JSONObject obj;
+                try {
+                    obj = new JSONObject(data);
+
+                } catch (Exception err) {
+                    obj = new JSONObject();
+                }
+                listener.onCreateTokenReady(obj);
             }
         });
-        connection.request(activity.getApplicationContext(), body, this.endPoint);
+        connection.request(nameValuePair, this.endPoint);
     }
 }

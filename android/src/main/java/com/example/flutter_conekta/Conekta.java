@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import android.webkit.CookieManager;
 
 /**
- * Created by Alfredo Quintero Tlacuilo on 11/07/19.
+ * Created by picharras on 27/10/15.
  */
 public abstract class Conekta {
     private static String apiVersion = "0.3.0";
@@ -44,10 +44,6 @@ public abstract class Conekta {
         return Conekta.language;
     }
 
-    public static String deviceFingerPrint(Activity activity) {
-        return Settings.Secure.getString(activity.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
-
     public static void collectDevice(final Activity activity) {
         String sessionId = Conekta.deviceFingerPrint(activity);
         String publicKey = Conekta.getPublicKey();
@@ -69,5 +65,9 @@ public abstract class Conekta {
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.loadDataWithBaseURL("https://conektaapi.s3.amazonaws.com/v0.5.0/js/conekta.js", html, "text/html", "UTF-8", null);
+    }
+
+    public static String deviceFingerPrint(Activity activity) {
+        return Settings.Secure.getString(activity.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }

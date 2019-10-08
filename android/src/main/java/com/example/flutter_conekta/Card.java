@@ -1,8 +1,5 @@
 package com.example.flutter_conekta;
 
-/**
- * Created by Alfredo Quintero Tlacuilo on 11/07/19.
- */
 public class Card {
     private String number;
     private String name;
