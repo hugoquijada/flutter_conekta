@@ -53,6 +53,7 @@
             NSString* id = [data objectForKey:@"id"];
             if( ( [id isEqual:[NSNull null]] ) || ( [id length] == 0 ) ) {
                 result([FlutterError errorWithCode:@"ERROR_UNABLE_TO_TOKENIZE" message:[data objectForKey:@"message"] details:nil]);
+                return;
             }
             result(id);
         } andError:^(NSError* error) {
